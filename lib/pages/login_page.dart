@@ -1,9 +1,9 @@
-import 'package:chat/widgets/labels.dart';
-import 'package:chat/widgets/logo.dart';
-
 import 'package:flutter/material.dart';
 
+import '../widgets/boton_azul.dart';
 import '../widgets/custom_input.dart';
+import '../widgets/labels.dart';
+import '../widgets/logo.dart';
 
 class LoginPage extends StatelessWidget {
   @override
@@ -60,12 +60,12 @@ class __FormState extends State<_Form> {
             textController: passController,
             isPassword: true,
           ),
-          ElevatedButton(
+          BotonAzul(
+            texto: 'Ingresar',
             onPressed: () {
               print(emailController.text);
               print(passController.text);
             },
-            child: null,
           )
         ],
       ),
