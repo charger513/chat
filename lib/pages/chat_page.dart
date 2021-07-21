@@ -11,6 +11,8 @@ class ChatPage extends StatefulWidget {
 final textController = TextEditingController();
 final focusNode = FocusNode();
 
+bool _estaEscribiendo = false;
+
 class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
@@ -76,7 +78,13 @@ class _ChatPageState extends State<ChatPage> {
                 controller: textController,
                 onSubmitted: _handleSubmit,
                 onChanged: (texto) {
-                  //
+                  setState(() {
+                    if (texto.trim().length > 0) {
+                      _estaEscribiendo = true;
+                    } else {
+                      _estaEscribiendo = false;
+                    }
+                  });
                 },
                 decoration: InputDecoration.collapsed(
                   hintText: 'Enviar mensaje',
@@ -91,14 +99,20 @@ class _ChatPageState extends State<ChatPage> {
               child: !Platform.isIOS
                   ? CupertinoButton(
                       child: Text('Enviar'),
-                      onPressed: () {},
+                      onPressed: _estaEscribiendo
+                          ? () => _handleSubmit(textController.text)
+                          : null,
                     )
                   : Container(
                       margin: const EdgeInsets.symmetric(horizontal: 4),
                       child: IconButton(
                         icon: Icon(Icons.send),
                         color: Colors.blue[400],
-                        onPressed: () {},
+                        highlightColor: Colors.transparent,
+                        splashColor: Colors.transparent,
+                        onPressed: _estaEscribiendo
+                            ? () => _handleSubmit(textController.text)
+                            : null,
                       ),
                     ),
             )
@@ -112,5 +126,8 @@ class _ChatPageState extends State<ChatPage> {
     print(texto);
     focusNode.requestFocus();
     textController.clear();
+    setState(() {
+      _estaEscribiendo = false;
+    });
   }
 }
