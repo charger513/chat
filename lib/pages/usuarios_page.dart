@@ -1,5 +1,7 @@
-import 'package:chat/models/usuario.dart';
 import 'package:flutter/material.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+
+import '../models/usuario.dart';
 
 class UsuariosPage extends StatefulWidget {
   @override
@@ -7,6 +9,9 @@ class UsuariosPage extends StatefulWidget {
 }
 
 class _UsuariosPageState extends State<UsuariosPage> {
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
+
   final usuarios = [
     Usuario(uid: '1', nombre: 'Mariana', email: 'test1@tet.com', online: true),
     Usuario(uid: '2', nombre: 'Emmanuel', email: 'test2@tet.com', online: true),
@@ -16,62 +21,87 @@ class _UsuariosPageState extends State<UsuariosPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Mi Nombre',
-          style: TextStyle(
-            color: Colors.black87,
-          ),
-        ),
-        elevation: 1,
-        backgroundColor: Colors.white,
-        leading: IconButton(
-          icon: Icon(
-            Icons.exit_to_app,
-            color: Colors.black87,
-          ),
-          onPressed: () {},
-        ),
-        actions: [
-          Container(
-            margin: const EdgeInsets.only(right: 10),
-            child: Icon(
-              Icons.offline_bolt,
-              color: Colors.red[400],
+        appBar: AppBar(
+          title: Text(
+            'Mi Nombre',
+            style: TextStyle(
+              color: Colors.black87,
             ),
-            // Icon(
-            //   Icons.check_circle,
-            //   color: Colors.blue[400],
-            // ),
-          )
-        ],
+          ),
+          elevation: 1,
+          backgroundColor: Colors.white,
+          leading: IconButton(
+            icon: Icon(
+              Icons.exit_to_app,
+              color: Colors.black87,
+            ),
+            onPressed: () {},
+          ),
+          actions: [
+            Container(
+              margin: const EdgeInsets.only(right: 10),
+              child: Icon(
+                Icons.offline_bolt,
+                color: Colors.red[400],
+              ),
+              // Icon(
+              //   Icons.check_circle,
+              //   color: Colors.blue[400],
+              // ),
+            )
+          ],
+        ),
+        body: SmartRefresher(
+          controller: _refreshController,
+          enablePullDown: true,
+          header: WaterDropHeader(
+            complete: Icon(
+              Icons.check,
+              color: Colors.blue[400],
+            ),
+            waterDropColor: Colors.blue[400]!,
+          ),
+          onRefresh: _cargarUsuarios,
+          child: _listViewUsuarios(),
+        ));
+  }
+
+  ListView _listViewUsuarios() {
+    return ListView.separated(
+      physics: BouncingScrollPhysics(),
+      itemCount: usuarios.length,
+      itemBuilder: (ctx, index) {
+        return _usuarioListTile(usuarios[index]);
+      },
+      separatorBuilder: (ctx, index) => Divider(),
+    );
+  }
+
+  ListTile _usuarioListTile(Usuario usuario) {
+    return ListTile(
+      title: Text(usuario.nombre),
+      leading: CircleAvatar(
+        backgroundColor: Colors.blue[100],
+        child: Center(
+          child: Text(
+            usuario.nombre.substring(0, 2),
+          ),
+        ),
       ),
-      body: ListView.separated(
-        physics: BouncingScrollPhysics(),
-        itemCount: usuarios.length,
-        itemBuilder: (ctx, index) {
-          final usuario = usuarios[index];
-          return ListTile(
-            title: Text(usuario.nombre),
-            leading: CircleAvatar(
-              child: Center(
-                child: Text(
-                  usuario.nombre.substring(0, 2),
-                ),
-              ),
-            ),
-            trailing: Container(
-              width: 10,
-              height: 10,
-              decoration: BoxDecoration(
-                color: usuario.online ? Colors.green[300] : Colors.red,
-                borderRadius: BorderRadius.circular(100),
-              ),
-            ),
-          );
-        },
-        separatorBuilder: (ctx, index) => Divider(),
+      trailing: Container(
+        width: 10,
+        height: 10,
+        decoration: BoxDecoration(
+          color: usuario.online ? Colors.green[300] : Colors.red,
+          borderRadius: BorderRadius.circular(100),
+        ),
       ),
     );
+  }
+
+  void _cargarUsuarios() async {
+    await Future.delayed(Duration(milliseconds: 1000));
+    // if failed,use refreshFailed()
+    _refreshController.refreshCompleted();
   }
 }
