@@ -1,12 +1,23 @@
 import 'package:flutter/material.dart';
 
 class Labels extends StatelessWidget {
+  final String texto;
+  final String textoLink;
+  final String ruta;
+
+  const Labels({
+    Key? key,
+    required this.texto,
+    required this.textoLink,
+    required this.ruta,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Text(
-          "¿No tienes cuenta?",
+          texto,
           style: TextStyle(
             color: Colors.black54,
             fontSize: 15,
@@ -18,13 +29,16 @@ class Labels extends StatelessWidget {
         ),
         GestureDetector(
           child: Text(
-            '¡Crea una ahora!',
+            textoLink,
             style: TextStyle(
               color: Colors.blue[600],
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
           ),
+          onTap: () {
+            Navigator.of(context).pushReplacementNamed(ruta);
+          },
         )
       ],
     );
