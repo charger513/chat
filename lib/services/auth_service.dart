@@ -1,12 +1,15 @@
 import 'dart:convert';
+import 'dart:developer';
 
-import 'package:chat/global/environment.dart';
+import 'package:chat/models/login_response.dart';
 import 'package:chat/models/usuario.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import '../global/environment.dart';
+
 class AuthService with ChangeNotifier {
-  // final Usuario usuario;
+  Usuario? usuario;
 
   Future login(String email, String password) async {
     final data = {
@@ -25,5 +28,9 @@ class AuthService with ChangeNotifier {
     );
 
     print(resp.body);
+    if (resp.statusCode == 200) {
+      final loginResponse = LoginResponse.fromJson(jsonDecode(resp.body));
+      usuario = loginResponse.usuario;
+    }
   }
 }
