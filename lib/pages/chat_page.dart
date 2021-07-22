@@ -1,8 +1,9 @@
 import 'dart:io';
 
-import 'package:chat/widgets/chat_message.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../widgets/chat_message.dart';
 
 class ChatPage extends StatefulWidget {
   @override
@@ -12,17 +13,11 @@ class ChatPage extends StatefulWidget {
 final textController = TextEditingController();
 final focusNode = FocusNode();
 
-final List<ChatMessage> _messages = [
-  ChatMessage(texto: 'Hola Mundo', uid: '123'),
-  ChatMessage(texto: 'Hola Mundo', uid: '1233'),
-  ChatMessage(texto: 'Hola Mundo', uid: '1233'),
-  ChatMessage(texto: 'Hola Mundo', uid: '123'),
-  ChatMessage(texto: 'Hola Mundo', uid: '123'),
-];
+final List<ChatMessage> _messages = [];
 
 bool _estaEscribiendo = false;
 
-class _ChatPageState extends State<ChatPage> {
+class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -132,12 +127,23 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void _handleSubmit(String texto) {
-    print(texto);
+    if (texto.length == 0) return;
     focusNode.requestFocus();
     textController.clear();
 
-    final chatMessage = ChatMessage(texto: texto.trim(), uid: '123');
+    final chatMessage = ChatMessage(
+      texto: texto.trim(),
+      uid: '123',
+      animationController: AnimationController(
+        vsync: this,
+        duration: Duration(
+          milliseconds: 200,
+        ),
+      ),
+    );
     _messages.insert(0, chatMessage);
+    chatMessage.animationController.forward();
+
     setState(() {
       _estaEscribiendo = false;
     });
