@@ -1,4 +1,4 @@
-import 'package:chat/models/usuario.dart';
+import 'usuario.dart';
 
 class LoginResponse {
   final bool ok;

@@ -10,8 +10,16 @@ import '../global/environment.dart';
 
 class AuthService with ChangeNotifier {
   Usuario? usuario;
+  bool _autenticando = false;
+
+  bool get autenticando => _autenticando;
+  set autenticando(bool valor) {
+    _autenticando = valor;
+    notifyListeners();
+  }
 
   Future login(String email, String password) async {
+    autenticando = true;
     final data = {
       'email': email,
       'password': password,
@@ -32,5 +40,6 @@ class AuthService with ChangeNotifier {
       final loginResponse = LoginResponse.fromJson(jsonDecode(resp.body));
       usuario = loginResponse.usuario;
     }
+    autenticando = false;
   }
 }
