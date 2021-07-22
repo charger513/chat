@@ -18,8 +18,10 @@ class AuthService with ChangeNotifier {
     notifyListeners();
   }
 
-  Future login(String email, String password) async {
+  Future<bool> login(String email, String password) async {
     autenticando = true;
+    bool success = false;
+
     final data = {
       'email': email,
       'password': password,
@@ -35,11 +37,13 @@ class AuthService with ChangeNotifier {
       },
     );
 
-    print(resp.body);
     if (resp.statusCode == 200) {
       final loginResponse = LoginResponse.fromJson(jsonDecode(resp.body));
       usuario = loginResponse.usuario;
+      success = true;
     }
+
     autenticando = false;
+    return success;
   }
 }
