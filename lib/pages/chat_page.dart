@@ -10,14 +10,22 @@ class ChatPage extends StatefulWidget {
   _ChatPageState createState() => _ChatPageState();
 }
 
-final textController = TextEditingController();
-final focusNode = FocusNode();
-
-final List<ChatMessage> _messages = [];
-
-bool _estaEscribiendo = false;
-
 class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
+  final textController = TextEditingController();
+  final focusNode = FocusNode();
+
+  final List<ChatMessage> _messages = [];
+
+  bool _estaEscribiendo = false;
+
+  @override
+  void dispose() {
+    for (final message in _messages) {
+      message.animationController.dispose();
+    }
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
