@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:chat/services/chat_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../widgets/chat_message.dart';
 
@@ -28,6 +30,9 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final chatService = Provider.of<ChatService>(context);
+    final usuarioPara = chatService.usuarioPara!;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -38,7 +43,7 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
             CircleAvatar(
               maxRadius: 14,
               child: Text(
-                'Te',
+                usuarioPara.nombre.substring(0, 2),
                 style: TextStyle(fontSize: 12),
               ),
               backgroundColor: Colors.blue[100],
@@ -47,7 +52,7 @@ class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
               height: 3,
             ),
             Text(
-              'Emmanuel Chargoy',
+              usuarioPara.nombre,
               style: TextStyle(color: Colors.black87, fontSize: 12),
             )
           ],
