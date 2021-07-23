@@ -38,6 +38,7 @@ class _UsuariosPageState extends State<UsuariosPage> {
               color: Colors.black87,
             ),
           ),
+          centerTitle: true,
           elevation: 1,
           backgroundColor: Colors.white,
           leading: IconButton(
