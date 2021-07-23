@@ -1,8 +1,9 @@
-import 'package:chat/helpers/mostrar_alerta.dart';
-import 'package:chat/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../helpers/mostrar_alerta.dart';
+import '../services/auth_service.dart';
+import '../services/socket_service.dart';
 import '../widgets/boton_azul.dart';
 import '../widgets/custom_input.dart';
 import '../widgets/labels.dart';
@@ -57,6 +58,8 @@ class __FormState extends State<_Form> {
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
+    final socketService = Provider.of<SocketService>(context);
+
     return Container(
       margin: const EdgeInsets.only(
         top: 40,
@@ -92,6 +95,7 @@ class __FormState extends State<_Form> {
                       passController.text.trim(),
                     );
                     if (registerOk == true) {
+                      socketService.connect();
                       Navigator.of(context).pushReplacementNamed('usuarios');
                     } else {
                       mostrarAlerta(context, "Error", registerOk);
