@@ -5,6 +5,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../models/usuario.dart';
 import '../services/auth_service.dart';
 import '../services/socket_service.dart';
+import '../services/usuarios_service.dart';
 
 class UsuariosPage extends StatefulWidget {
   @override
@@ -12,14 +13,23 @@ class UsuariosPage extends StatefulWidget {
 }
 
 class _UsuariosPageState extends State<UsuariosPage> {
+  final usuariosService = UsuariosService();
+  List<Usuario> usuarios = [];
+
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
 
-  final usuarios = [
-    Usuario(uid: '1', nombre: 'Mariana', email: 'test1@tet.com', online: true),
-    Usuario(uid: '2', nombre: 'Emmanuel', email: 'test2@tet.com', online: true),
-    Usuario(uid: '3', nombre: 'Albert', email: 'test3@tet.com', online: false),
-  ];
+  // final usuarios = [
+  //   Usuario(uid: '1', nombre: 'Mariana', email: 'test1@tet.com', online: true),
+  //   Usuario(uid: '2', nombre: 'Emmanuel', email: 'test2@tet.com', online: true),
+  //   Usuario(uid: '3', nombre: 'Albert', email: 'test3@tet.com', online: false),
+  // ];
+
+  @override
+  void initState() {
+    super.initState();
+    _cargarUsuarios();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +120,9 @@ class _UsuariosPageState extends State<UsuariosPage> {
   }
 
   void _cargarUsuarios() async {
-    await Future.delayed(Duration(milliseconds: 1000));
+    usuarios = await usuariosService.getUsuarios();
+    setState(() {});
+    // await Future.delayed(Duration(milliseconds: 1000));
     // if failed,use refreshFailed()
     _refreshController.refreshCompleted();
   }
